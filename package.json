@@ -3,13 +3,27 @@
     "test": "jest"
   },
   "devDependencies": {
-   
+    "eslint": "^8.29.0",
     "jest": "^26.6.3",
     "rewire": "^6.0.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/DigitalCareerInstitute/PB-the-cashier-problem",
+    "url": "git+https://github.com/DigitalCareerInstitute/PB-the-cashier-problem.git",
     "id": 344053613
-  }
+  },
+  "dependencies": {
+    "readline-sync": "^1.4.10"
+  },
+  "name": "pb-final-project",
+  "description": "Write a function named `cashCounter` that helps a cashier give adequate change to customers. The function should return the amount of notes and coins for the customer's change.",
+  "bugs": {
+    "url": "https://github.com/DigitalCareerInstitute/PB-the-cashier-problem/issues"
+  },
+  "homepage": "https://github.com/DigitalCareerInstitute/PB-the-cashier-problem#readme",
+  "version": "1.0.0",
+  "main": "solution.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
