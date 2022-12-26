@@ -16,7 +16,7 @@ const createCashCounter = function () {
         { 0.01: 25 },
     ];
 
-    return function (price, paidAmt) {
+    return function (price, paidCash) {
         // calculate the total amount of money available in the cashBox
         let cashBoxTotal = cashBox
             .map(obj => Object.entries(obj))
@@ -24,7 +24,7 @@ const createCashCounter = function () {
             .reduce((acc, entry) => acc + (Number(entry[0]) * entry[1]), 0);
 
         // calculate the change
-        let totalChange = paidAmt - price;
+        let totalChange = paidCash - price;
 
         // create array to store change
         let changeArray = [];
@@ -50,9 +50,9 @@ const createCashCounter = function () {
             console.log('Cash box before adding paid cash:', cashBox);
             // add paid cash to cash box
             cashBox.forEach(denom => {
-                if (paidAmt >= Object.keys(denom)) {
-                    let denomCount = Math.floor(paidAmt / Object.keys(denom));
-                    paidAmt = parseFloat((paidAmt % Object.keys(denom)).toFixed(2));
+                if (paidCash >= Object.keys(denom)) {
+                    let denomCount = Math.floor(paidCash / Object.keys(denom));
+                    paidCash = parseFloat((paidCash % Object.keys(denom)).toFixed(2));
                     denom[Object.keys(denom)] += denomCount;
 
                 }
@@ -62,8 +62,11 @@ const createCashCounter = function () {
 
             // deduct change from cash Box
             cashBox.forEach(denom => {
-                if (totalChange >= Object.keys(denom)) {
+                if (totalChange >= Object.keys(denom) && denom[Object.keys(denom)] > 0) {
                     let denomCount = Math.floor(totalChange / Object.keys(denom));
+                    if (denomCount > denom[Object.keys(denom)]) {
+                        denomCount = denom[Object.keys(denom)];
+                    }
                     if (Object.keys(denom) >= 1) {
                         changeArray.push({ [Object.keys(denom) + ' Euro']: denomCount });
                     } else
