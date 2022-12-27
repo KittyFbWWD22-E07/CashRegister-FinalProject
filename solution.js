@@ -17,6 +17,7 @@ const createCashCounter = function () {
     ];
 
     return function (price, paidCash) {
+
         // calculate the total amount of money available in the cashBox
         let cashBoxTotal = cashBox
             .map(obj => Object.entries(obj))
@@ -34,9 +35,9 @@ const createCashCounter = function () {
         if (totalChange < 0 && Math.abs(totalChange) === 1) {
             return `Customer should pay 1 more Euro.`;
         } else if (totalChange < 0 && Math.abs(totalChange) < 1) {
-            return `Customer should pay ${Math.abs(totalChange) * 100} more cents.`;
+            return `Customer should pay ${Math.abs(totalChange.toFixed(2)) * 100} more cents.`;
         } else if (totalChange < 0 && Math.abs(totalChange) > 1) {
-            return `Customer should pay ${Math.abs(totalChange)} more Euros.`;
+            return `Customer should pay ${Math.abs(totalChange.toFixed(2))} more Euros.`;
         }
 
         // check if cash box is empty or not enough coins
@@ -84,7 +85,9 @@ const createCashCounter = function () {
         return changeArray;
 
     }
+
 }
+
 
 cashCounter = createCashCounter();
 
@@ -101,12 +104,13 @@ console.log('The Customer receives:', cashCounter(4.50, 20), '\n');
 // [ { '10 Euro': 1 }, { '5 Euro': 1 }, { '0.5 Cent': 1 } ]
 
 console.log('The Customer receives:', cashCounter(4, 3), '\n');
-// 'Customer should pay 1 more Euro'
+// 'Customer should pay 1 more Euro.'
 
-console.log('The Customer receives:', cashCounter(1050, 1100), '\n');
-// [
-// { '50 Euro': 2 },
-// { '20 Euro': 2 },
-// { '5 Euro': 1 },
-// { '1 Euro': 1 }
-// ]
+console.log('The Customer receives:', cashCounter(3.80, 3), '\n');
+// 'Customer should pay 80 more cents.'
+
+console.log('The Customer receives:', cashCounter(16.75, 15), '\n');
+// 'Customer should pay 1.75 more Euros.'
+
+console.log('The Customer receives:', cashCounter(25.50, 1500), '\n');
+// ' No change is Available!'
