@@ -52,8 +52,8 @@ const createCashCounter = function () {
             cashBox.forEach(denom => {
                 if (paidCash >= Object.keys(denom)) {
                     let denomCount = Math.floor(paidCash / Object.keys(denom));
-                    paidCash = parseFloat((paidCash % Object.keys(denom)).toFixed(2));
                     denom[Object.keys(denom)] += denomCount;
+                    paidCash = parseFloat((paidCash % Object.keys(denom)).toFixed(2));
 
                 }
             });
@@ -73,7 +73,8 @@ const createCashCounter = function () {
                         changeArray.push({ [Object.keys(denom) + ' Cent']: denomCount });
 
                     denom[Object.keys(denom)] -= denomCount;
-                    totalChange = parseFloat((totalChange % Object.keys(denom)).toFixed(2));
+                    totalChange = parseFloat((totalChange - denomCount * Object.keys(denom)).toFixed(2));
+
                 }
             });
 
@@ -102,7 +103,7 @@ console.log('The Customer receives:', cashCounter(4.50, 20), '\n');
 console.log('The Customer receives:', cashCounter(4, 3), '\n');
 // 'Customer should pay 1 more Euro'
 
-console.log('The Customer receives:', cashCounter(4, 150), '\n');
+console.log('The Customer receives:', cashCounter(1050, 1100), '\n');
 // [
 // { '50 Euro': 2 },
 // { '20 Euro': 2 },
