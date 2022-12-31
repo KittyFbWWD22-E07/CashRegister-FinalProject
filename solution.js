@@ -17,6 +17,20 @@ const createCashCounter = function () {
     ];
 
     return function (price, paidCash) {
+        // let cashBox = [
+        //     { 50: 10 },
+        //     { 20: 10 },
+        //     { 10: 10 },
+        //     { 5: 25 },
+        //     { 2: 25 },
+        //     { 1: 25 },
+        //     { 0.5: 25 },
+        //     { 0.2: 25 },
+        //     { 0.1: 25 },
+        //     { 0.05: 25 },
+        //     { 0.02: 25 },
+        //     { 0.01: 25 },
+        // ];
 
         // calculate the total amount of money available in the cashBox
         let cashBoxTotal = cashBox
@@ -88,9 +102,9 @@ const createCashCounter = function () {
 
 }
 
+const cashCounter = createCashCounter();
 
-cashCounter = createCashCounter();
-
+console.log('TEST 1');
 console.log('The Customer receives:', cashCounter(3.75, 50), '\n');
 // [
 // { '20 Euro': 2 },
@@ -99,18 +113,29 @@ console.log('The Customer receives:', cashCounter(3.75, 50), '\n');
 // { '0.2 Cent': 1 },
 // { '0.05 Cent': 1 }
 // ]
-
+console.log('TEST 2');
 console.log('The Customer receives:', cashCounter(4.50, 20), '\n');
 // [ { '10 Euro': 1 }, { '5 Euro': 1 }, { '0.5 Cent': 1 } ]
 
+console.log('TEST 3');
 console.log('The Customer receives:', cashCounter(4, 3), '\n');
 // 'Customer should pay 1 more Euro.'
 
+console.log('TEST 4');
 console.log('The Customer receives:', cashCounter(3.80, 3), '\n');
 // 'Customer should pay 80 more cents.'
 
+console.log('TEST 5');
 console.log('The Customer receives:', cashCounter(16.75, 15), '\n');
 // 'Customer should pay 1.75 more Euros.'
 
+console.log('TEST 6');
 console.log('The Customer receives:', cashCounter(25.50, 1500), '\n');
 // ' No change is Available!'
+
+console.log('TEST 7: user input');
+const readlineSync = require('readline-sync');
+
+const priceOfItems = readlineSync.question('Please enter the total price of the items: ');
+const cashPaid = readlineSync.question('Please enter the amount of cash given by customer: ');
+console.log('The customer receives:', cashCounter(priceOfItems, cashPaid));
