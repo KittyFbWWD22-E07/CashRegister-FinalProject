@@ -133,9 +133,9 @@ console.log('TEST 6');
 console.log('The Customer receives:', cashCounter(25.50, 1500), '\n');
 // ' No change is Available!'
 
-console.log('TEST 7: user input');
-const readlineSync = require('readline-sync');
+// console.log('TEST 7: user input');
+// const readlineSync = require('readline-sync');
 
-const priceOfItems = readlineSync.question('Please enter the total price of the items: ');
-const cashPaid = readlineSync.question('Please enter the amount of cash given by customer: ');
-console.log('The customer receives:', cashCounter(priceOfItems, cashPaid));
+// const costOfItems = readlineSync.question('Please enter the total price of the items: ');
+// const cashPaid = readlineSync.question('Please enter the amount of cash given by customer: ');
+// console.log('The customer receives:', cashCounter(costOfItems, cashPaid));
