@@ -102,7 +102,7 @@ const createCashCounter = function () {
 
 }
 
-const cashCounter = createCashCounter();
+cashCounter = createCashCounter();
 
 console.log('TEST 1');
 console.log('The Customer receives:', cashCounter(3.75, 50), '\n');
