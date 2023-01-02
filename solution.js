@@ -17,20 +17,7 @@ const createCashCounter = function () {
     ];
 
     return function (price, paidCash) {
-        // let cashBox = [
-        //     { 50: 10 },
-        //     { 20: 10 },
-        //     { 10: 10 },
-        //     { 5: 25 },
-        //     { 2: 25 },
-        //     { 1: 25 },
-        //     { 0.5: 25 },
-        //     { 0.2: 25 },
-        //     { 0.1: 25 },
-        //     { 0.05: 25 },
-        //     { 0.02: 25 },
-        //     { 0.01: 25 },
-        // ];
+
 
         // calculate the total amount of money available in the cashBox
         let cashBoxTotal = cashBox
@@ -63,32 +50,36 @@ const createCashCounter = function () {
         else if (cashBoxTotal > totalChange) {
 
             console.log('Cash box before adding paid cash:', cashBox);
+
             // add paid cash to cash box
             cashBox.forEach(denom => {
-                if (paidCash >= Object.keys(denom)) {
-                    let denomCount = Math.floor(paidCash / Object.keys(denom));
-                    denom[Object.keys(denom)] += denomCount;
-                    paidCash = parseFloat((paidCash % Object.keys(denom)).toFixed(2));
+                let denomVal = Object.keys(denom)[0];
+                if (paidCash >= Number(denomVal)) {
+                    let denomCount = Math.floor(paidCash / Number(denomVal));
+                    denom[denomVal] += denomCount;
+                    paidCash = parseFloat((paidCash % Number(denomVal)).toFixed(2));
 
                 }
+
             });
 
             console.log('Cash box after adding paid cash:', cashBox);
 
             // deduct change from cash Box
             cashBox.forEach(denom => {
-                if (totalChange >= Object.keys(denom) && denom[Object.keys(denom)] > 0) {
-                    let denomCount = Math.floor(totalChange / Object.keys(denom));
-                    if (denomCount > denom[Object.keys(denom)]) {
-                        denomCount = denom[Object.keys(denom)];
+                let denomVal = Object.keys(denom)[0];
+                if (totalChange >= Number(denomVal) && denom[denomVal] > 0) {
+                    let denomCount = Math.floor(totalChange / Number(denomVal));
+                    if (denomCount > denom[denomVal]) {
+                        denomCount = denom[denomVal];
                     }
-                    if (Object.keys(denom) >= 1) {
-                        changeArray.push({ [Object.keys(denom) + ' Euro']: denomCount });
+                    if (denomVal >= 1) {
+                        changeArray.push({[denomVal + ' Euro']: denomCount});
                     } else
-                        changeArray.push({ [Object.keys(denom) + ' Cent']: denomCount });
+                        changeArray.push({[denomVal + ' Cent']: denomCount});
 
-                    denom[Object.keys(denom)] -= denomCount;
-                    totalChange = parseFloat((totalChange - denomCount * Object.keys(denom)).toFixed(2));
+                    denom[denomVal] -= denomCount;
+                    totalChange = parseFloat((totalChange - denomCount * Number(denomVal)).toFixed(2));
 
                 }
             });
