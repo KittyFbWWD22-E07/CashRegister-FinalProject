@@ -25,8 +25,12 @@ const createCashCounter = function () {
             .flat()
             .reduce((acc, entry) => acc + (Number(entry[0]) * entry[1]), 0);
 
+        // calculate total of paid cash
+        const totalPaidCash = paidCash.reduce((acc , paidDenomArray) => acc + (paidDenomArray[0] * paidDenomArray[1]), 0);
+
         // calculate the change
-        let totalChange = paidCash - price;
+        let totalChange = parseFloat((totalPaidCash - price).toFixed(2));
+        let change = totalChange;
 
         // create array to store change
         let changeArray = [];
@@ -36,9 +40,9 @@ const createCashCounter = function () {
         if (totalChange < 0 && Math.abs(totalChange) === 1) {
             return `Customer should pay 1 more Euro.`;
         } else if (totalChange < 0 && Math.abs(totalChange) < 1) {
-            return `Customer should pay ${Math.abs(totalChange.toFixed(2)) * 100} more cents.`;
+            return `Customer should pay ${Math.abs(totalChange) * 100} more cents.`;
         } else if (totalChange < 0 && Math.abs(totalChange) > 1) {
-            return `Customer should pay ${Math.abs(totalChange.toFixed(2))} more Euros.`;
+            return `Customer should pay ${Math.abs(totalChange)} more Euros.`;
         }
 
         // check if cash box is empty or not enough coins
@@ -51,40 +55,44 @@ const createCashCounter = function () {
 
             console.log('Cash box before adding paid cash:', cashBox);
 
-            // add paid cash to cash box
-            cashBox.forEach(denom => {
-                let denomVal = Object.keys(denom)[0];
-                if (paidCash >= Number(denomVal)) {
-                    let denomCount = Math.floor(paidCash / Number(denomVal));
-                    denom[denomVal] += denomCount;
-                    paidCash = parseFloat((paidCash % Number(denomVal)).toFixed(2));
+                // add paid cash to cash box a follows
+                cashBox.forEach(denom => {
+                    let denomVal = Object.keys(denom)[0];
+                    for (const paidCashDenom of paidCash) {
+                        if (paidCashDenom[0] === Number(denomVal)) {
+                            let denomCount = paidCashDenom[1];
+                            denom[denomVal] += denomCount;
 
-                }
+                        }
+                    }
 
-            });
+                });
 
             console.log('Cash box after adding paid cash:', cashBox);
 
-            // deduct change from cash Box
-            cashBox.forEach(denom => {
-                let denomVal = Object.keys(denom)[0];
-                if (totalChange >= Number(denomVal) && denom[denomVal] > 0) {
-                    let denomCount = Math.floor(totalChange / Number(denomVal));
-                    if (denomCount > denom[denomVal]) {
-                        denomCount = denom[denomVal];
-                    }
+                // deduct change from cash Box
+                cashBox.forEach(denom => {
+                    let denomVal = Object.keys(denom)[0];
+                    if (totalChange >= Number(denomVal) && denom[denomVal] > 0) {
+                        let denomCount = Math.floor(totalChange / Number(denomVal));
+                        if (denomCount > denom[denomVal]) {
+                            denomCount = denom[denomVal];
+                        }
                     if (denomVal >= 1) {
-                        changeArray.push({[denomVal + ' Euro']: denomCount});
+                        changeArray.push({ [denomVal + ' Euro']: denomCount });
                     } else
-                        changeArray.push({[denomVal + ' Cent']: denomCount});
+                        changeArray.push({ [denomVal + ' Cent']: denomCount });
 
                     denom[denomVal] -= denomCount;
                     totalChange = parseFloat((totalChange - denomCount * Number(denomVal)).toFixed(2));
 
-                }
-            });
+                    }
+                });
 
-            console.log('Cash box after deducting change:', cashBox);
+            console.log('Cash box after deducting change:', cashBox, '\n');
+            console.log(`Price: €${price}`);
+            console.log(`Cash paid: €${totalPaidCash}`);
+            console.log(`Change: €${change}`);
 
         }
         return changeArray;
@@ -96,7 +104,7 @@ const createCashCounter = function () {
 cashCounter = createCashCounter();
 
 console.log('TEST 1');
-console.log('The Customer receives:', cashCounter(3.75, 50), '\n');
+console.log('The Customer receives:', cashCounter(3.75, [[50, 1]]), '\n');
 // [
 // { '20 Euro': 2 },
 // { '5 Euro': 1 },
@@ -105,26 +113,29 @@ console.log('The Customer receives:', cashCounter(3.75, 50), '\n');
 // { '0.05 Cent': 1 }
 // ]
 console.log('TEST 2');
-console.log('The Customer receives:', cashCounter(4.50, 20), '\n');
+console.log('The Customer receives:', cashCounter(4.50, [[20, 1]]), '\n');
 // [ { '10 Euro': 1 }, { '5 Euro': 1 }, { '0.5 Cent': 1 } ]
 
 console.log('TEST 3');
-console.log('The Customer receives:', cashCounter(4, 3), '\n');
+console.log('The Customer receives:', cashCounter(4, [[2, 1], [1, 1]]), '\n');
 // 'Customer should pay 1 more Euro.'
 
 console.log('TEST 4');
-console.log('The Customer receives:', cashCounter(3.80, 3), '\n');
+console.log('The Customer receives:', cashCounter(3.80, [[2, 1], [1, 1]]), '\n');
 // 'Customer should pay 80 more cents.'
 
 console.log('TEST 5');
-console.log('The Customer receives:', cashCounter(16.75, 15), '\n');
+console.log('The Customer receives:', cashCounter(16.33, [[5, 3]]), '\n');
 // 'Customer should pay 1.75 more Euros.'
 
 console.log('TEST 6');
-console.log('The Customer receives:', cashCounter(25.50, 1500), '\n');
+console.log('The Customer receives:', cashCounter(90, [[50, 75]]), '\n');
 // ' No change is Available!'
 
-// console.log('TEST 7: user input');
+console.log('TEST 7');
+console.log('The Customer receives:', cashCounter(35.50, [[10, 4], [0.50, 1]]), '\n');
+
+// console.log('TEST 8: user input');
 // const readlineSync = require('readline-sync');
 
 // const costOfItems = readlineSync.question('Please enter the total price of the items: ');
