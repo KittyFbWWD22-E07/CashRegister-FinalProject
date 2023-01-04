@@ -66,6 +66,9 @@ const createCashCounter = function () {
             for (const paidCashDenom of paidCash) {
                 if (!cashBoxDenoms.includes(paidCashDenom[0])) {
                     cashBox.unshift({ [paidCashDenom[0]]: paidCashDenom[1] })
+                    cashBox.sort((a, b) => {
+                        return Number(Object.keys(b)[0]) - Number(Object.keys(a)[0])
+                    })
                 } else
                     cashBox.forEach(denom => {
                         let denomVal = Object.keys(denom)[0];
@@ -114,7 +117,7 @@ const createCashCounter = function () {
 cashCounter = createCashCounter();
 
 console.log('TEST 1');
-console.log('The Customer receives:', cashCounter(3.75, [[100, 1]]), '\n');
+console.log('The Customer receives:', cashCounter(3.75, [[50, 1]]), '\n');
 // [
 // { '20 Euro': 2 },
 // { '5 Euro': 1 },
@@ -127,27 +130,50 @@ console.log('The Customer receives:', cashCounter(4.50, [[20, 1]]), '\n');
 // [ { '10 Euro': 1 }, { '5 Euro': 1 }, { '0.5 Cent': 1 } ]
 
 console.log('TEST 3');
+console.log('The Customer receives:', cashCounter(166.33, [[200, 1]]), '\n');
+
+console.log('TEST 4');
+console.log('The Customer receives:', cashCounter(25.99, [[100, 1]]), '\n');
+
+console.log('TEST 5');
 console.log('The Customer receives:', cashCounter(4, [[2, 1], [1, 1]]), '\n');
 // 'Customer should pay 1 more Euro.'
 
-console.log('TEST 4');
+console.log('TEST 6');
 console.log('The Customer receives:', cashCounter(3.80, [[2, 1], [1, 1]]), '\n');
 // 'Customer should pay 80 more cents.'
 
-console.log('TEST 5');
+console.log('TEST 7');
 console.log('The Customer receives:', cashCounter(16.33, [[5, 3]]), '\n');
 // 'Customer should pay 1.75 more Euros.'
 
-console.log('TEST 6');
-console.log('The Customer receives:', cashCounter(90, [[50, 75]]), '\n');
+console.log('TEST 8');
+console.log('The Customer receives:', cashCounter(90, [[500, 3]]), '\n');
 // ' No change is Available!'
 
-console.log('TEST 7');
+console.log('TEST 9');
 console.log('The Customer receives:', cashCounter(35.50, [[10, 4], [0.50, 1]]), '\n');
 
-// console.log('TEST 8: user input');
-// const readlineSync = require('readline-sync');
+console.log('TEST 10: user input');
+const readlineSync = require('readline-sync');
 
-// const costOfItems = readlineSync.question('Please enter the total price of the items: ');
-// const cashPaid = readlineSync.question('Please enter the amount of cash given by customer: ');
-// console.log('The customer receives:', cashCounter(costOfItems, cashPaid));
+let cashPaidByDenom = [];
+let cashDenomPaid, cashDenomQuantity;
+let cashPaidArray = [];
+const costOfItems = readlineSync.question('Please enter the total price of the items: ');
+do {
+    cashDenomPaid = readlineSync.question('Please enter the denomination: ');
+    if (cashDenomPaid === 'end') {
+        break;
+    }
+    cashDenomQuantity = readlineSync.question('Please enter the quantity: ');
+
+    cashPaidByDenom.push(Number(cashDenomPaid));
+    cashPaidByDenom.push(Number(cashDenomQuantity));
+
+    cashPaidArray.push(cashPaidByDenom);
+    cashPaidByDenom = [];
+
+
+} while (cashDenomPaid !== 'end')
+console.log('The customer receives:', cashCounter(costOfItems, cashPaidArray));
