@@ -26,7 +26,7 @@ const createCashCounter = function () {
             .reduce((acc, entry) => acc + (Number(entry[0]) * entry[1]), 0);
 
         // calculate total of paid cash
-        const totalPaidCash = paidCash.reduce((acc , paidDenomArray) => acc + (paidDenomArray[0] * paidDenomArray[1]), 0);
+        const totalPaidCash = paidCash.reduce((acc, paidDenomArray) => acc + (paidDenomArray[0] * paidDenomArray[1]), 0);
 
         // calculate the change
         let totalChange = parseFloat((totalPaidCash - price).toFixed(2));
@@ -55,30 +55,40 @@ const createCashCounter = function () {
 
             console.log('Cash box before adding paid cash:', cashBox);
 
-                // add paid cash to cash box a follows
-                cashBox.forEach(denom => {
-                    let denomVal = Object.keys(denom)[0];
-                    for (const paidCashDenom of paidCash) {
+            // add paid cash to cash box a follows
+
+            const cashBoxDenoms = [];
+            for (const denom of cashBox) {
+                for (key in denom) {
+                    cashBoxDenoms.push(Number(key));
+                }
+            }
+            for (const paidCashDenom of paidCash) {
+                if (!cashBoxDenoms.includes(paidCashDenom[0])) {
+                    cashBox.unshift({ [paidCashDenom[0]]: paidCashDenom[1] })
+                } else
+                    cashBox.forEach(denom => {
+                        let denomVal = Object.keys(denom)[0];
                         if (paidCashDenom[0] === Number(denomVal)) {
                             let denomCount = paidCashDenom[1];
                             denom[denomVal] += denomCount;
 
                         }
-                    }
-
-                });
+                    });
+            }
 
             console.log('Cash box after adding paid cash:', cashBox);
 
-                // deduct change from cash Box
-                cashBox.forEach(denom => {
-                    let denomVal = Object.keys(denom)[0];
-                    if (totalChange >= Number(denomVal) && denom[denomVal] > 0) {
-                        let denomCount = Math.floor(totalChange / Number(denomVal));
-                        if (denomCount > denom[denomVal]) {
-                            denomCount = denom[denomVal];
-                        }
-                    if (denomVal >= 1) {
+            // deduct change from cash Box
+            cashBox.forEach(denom => {
+                let denomVal = Object.keys(denom)[0];
+                if (totalChange >= Number(denomVal) && denom[denomVal] > 0) {
+                    let denomCount = Math.floor(totalChange / Number(denomVal));
+                    if (denomCount > denom[denomVal]) {
+                        denomCount = denom[denomVal];
+                    }
+
+                    if (Number(denomVal) >= 1) {
                         changeArray.push({ [denomVal + ' Euro']: denomCount });
                     } else
                         changeArray.push({ [denomVal + ' Cent']: denomCount });
@@ -86,8 +96,8 @@ const createCashCounter = function () {
                     denom[denomVal] -= denomCount;
                     totalChange = parseFloat((totalChange - denomCount * Number(denomVal)).toFixed(2));
 
-                    }
-                });
+                }
+            });
 
             console.log('Cash box after deducting change:', cashBox, '\n');
             console.log(`Price: €${price}`);
@@ -104,7 +114,7 @@ const createCashCounter = function () {
 cashCounter = createCashCounter();
 
 console.log('TEST 1');
-console.log('The Customer receives:', cashCounter(3.75, [[50, 1]]), '\n');
+console.log('The Customer receives:', cashCounter(3.75, [[100, 1]]), '\n');
 // [
 // { '20 Euro': 2 },
 // { '5 Euro': 1 },
